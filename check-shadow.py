@@ -2,6 +2,7 @@ from __future__ import print_function
 import apt_pkg
 import json
 import sys
+from functools import cmp_to_key
 
 # init the package system
 apt_pkg.init()
@@ -51,5 +52,36 @@ def cli_print_all():
     print(json.dumps(ads1,sort_keys=True,
                      indent=4))
 
+def cli_print_shadowed():
+    sites = sys.argv[1:]
+    assert len(sites)==1
+    site=sites[0]
+    ads1 = get_shadowed(site)
+    print(json.dumps(ads1,sort_keys=True,
+                     indent=4))
+
+def get_shadowed(site):
+    sites=[site]
+    package_dict = get_packages_with_multiple_versions_from_sites(sites)
+
+    result = {}
+    for pkg_name in package_dict:
+        this_dict = package_dict[pkg_name]
+        versions = this_dict.keys()
+        versions.sort(key=cmp_to_key(apt_pkg.version_compare))
+        site_found = False
+        shadowed=False
+        for version in versions:
+            this_site = this_dict[version]
+            if this_site.endswith(site):
+                site_found = True
+            else:
+                if site_found:
+                    shadowed=True
+        if shadowed:
+            result[pkg_name]=this_dict
+    return result
+
 if __name__=='__main__':
-    cli_print_all()
+    #cli_print_all()
+    cli_print_shadowed()
