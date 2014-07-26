@@ -6,7 +6,7 @@ import sys
 from functools import cmp_to_key
 
 def get_packages_with_multiple_versions_from_sites(sites,cache=None):
-    '''return names of packages that are available in multiple versions with at least one such version available at a site specified
+    '''return packages available in multiple versions with at least one such version available at a site specified
 
     arguments
     ---------
@@ -62,6 +62,25 @@ def cli_print_shadowed():
                      indent=4))
 
 def get_shadowed(site,cache=None):
+    '''return shadowed packages
+
+    arguments
+    ---------
+    site - a string (e.g. "strawlab.org")
+
+    returns
+    -------
+    packages_dict
+
+    where packages_dict is in the following form:
+    {"package_name":{"version_string1":"site1",
+                     "version_string2":"site2"}}
+
+    site1 would match the site argument, and version_string1 would
+    indicate an older version than version_string2 available from
+    site2.
+
+    '''
     sites=[site]
     package_dict = get_packages_with_multiple_versions_from_sites(sites,cache=cache)
 
