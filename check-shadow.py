@@ -26,24 +26,23 @@ def get_packages_with_multiple_versions_from_sites(sites,cache=None):
         cache = apt_pkg.Cache(progress=None)
     packages_dict = {}
     for i,pkg in enumerate(cache.packages):
-        if 1:
-            package_dict = {}
-            any_special=False
-            for version in pkg.version_list:
+        package_dict = {}
+        any_special=False
+        for version in pkg.version_list:
 
-                site = None
-                for pfile, _ in version.file_list:
-                    if pfile.index_type=='Debian Package Index':
-                        site = pfile.site
-                        break # do not care about multiple mirrors
-                if site is None:
-                    continue # no file available for this version
-                package_dict[version.ver_str] = site
-                for special_site in sites:
-                    if site.endswith(special_site):
-                        any_special=True
-            if any_special and len(package_dict) >= 2:
-                packages_dict[pkg.name] = package_dict
+            site = None
+            for pfile, _ in version.file_list:
+                if pfile.index_type=='Debian Package Index':
+                    site = pfile.site
+                    break # do not care about multiple mirrors
+            if site is None:
+                continue # no file available for this version
+            package_dict[version.ver_str] = site
+            for special_site in sites:
+                if site.endswith(special_site):
+                    any_special=True
+        if any_special and len(package_dict) >= 2:
+            packages_dict[pkg.name] = package_dict
     return packages_dict
 
 def cli_print_all():
