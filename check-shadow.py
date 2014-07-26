@@ -67,7 +67,7 @@ def get_shadowed(site):
     result = {}
     for pkg_name in package_dict:
         this_dict = package_dict[pkg_name]
-        versions = this_dict.keys()
+        versions = list(this_dict.keys())
         versions.sort(key=cmp_to_key(apt_pkg.version_compare))
         site_found = False
         shadowed=False
