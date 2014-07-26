@@ -6,7 +6,7 @@ from functools import cmp_to_key
 
 # init the package system
 apt_pkg.init()
-cache = apt_pkg.Cache()
+cache = apt_pkg.Cache(progress=None)
 
 def get_packages_with_multiple_versions_from_sites(sites):
     '''return names of packages that are available in multiple versions with at least one such version available at a site specified
