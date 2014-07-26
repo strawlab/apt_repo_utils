@@ -75,6 +75,10 @@ def get_shadowed(site):
             this_site = this_dict[version]
             if this_site.endswith(site):
                 site_found = True
+                if shadowed:
+                    # newer version is again shadowing the shadower
+                    site_found = False
+                    shadowed = False
             else:
                 if site_found:
                     shadowed=True
