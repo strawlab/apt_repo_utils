@@ -5,11 +5,7 @@ import json
 import sys
 from functools import cmp_to_key
 
-# init the package system
-apt_pkg.init()
-cache = apt_pkg.Cache(progress=None)
-
-def get_packages_with_multiple_versions_from_sites(sites):
+def get_packages_with_multiple_versions_from_sites(sites,cache=None):
     '''return names of packages that are available in multiple versions with at least one such version available at a site specified
 
     arguments
@@ -24,6 +20,10 @@ def get_packages_with_multiple_versions_from_sites(sites):
     {"package_name":{"version_string1":"site1",
                      "version_string2":"site2"}}
     '''
+    if cache is None:
+        apt_pkg.init()
+        apt_pkg.init()
+        cache = apt_pkg.Cache(progress=None)
     packages_dict = {}
     for i,pkg in enumerate(cache.packages):
         if 1:
@@ -61,9 +61,9 @@ def cli_print_shadowed():
     print(json.dumps(ads1,sort_keys=True,
                      indent=4))
 
-def get_shadowed(site):
+def get_shadowed(site,cache=None):
     sites=[site]
-    package_dict = get_packages_with_multiple_versions_from_sites(sites)
+    package_dict = get_packages_with_multiple_versions_from_sites(sites,cache=cache)
 
     result = {}
     for pkg_name in package_dict:
