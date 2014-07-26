@@ -25,7 +25,7 @@ def get_packages_with_multiple_versions_from_sites(sites,cache=None):
         apt_pkg.init()
         cache = apt_pkg.Cache(progress=None)
     packages_dict = {}
-    for i,pkg in enumerate(cache.packages):
+    for pkg in cache.packages:
         package_dict = {}
         any_special=False
         for version in pkg.version_list:
